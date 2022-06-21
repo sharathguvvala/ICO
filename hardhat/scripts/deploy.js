@@ -18,3 +18,5 @@ main()
     console.error(error);
     process.exit(1);
   });
+
+// smart contract address 0x559Ac5bD0B05C8679f48F933984D01B009904eE7
