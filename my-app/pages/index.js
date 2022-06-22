@@ -60,6 +60,9 @@ export default function Home() {
           <div className={styles.description} >
             You can claim or mint yor Web3 Dev Token here!
           </div>
+          <div>
+            
+          </div>
         </div>
       </div>
       <footer className={styles.footer}>
