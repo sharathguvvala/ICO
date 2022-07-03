@@ -25,6 +25,55 @@ export default function Home() {
   const [balanceOfAddress,setBalanceOfAddress] = useState(zero)
   const [tokenAmount,setTokenAmount] = useState(zero)
   const [loading,setLoading] = useState(false)
+  const [tokensToBeClaimed,setTokensToBeClaimed] = useState(zero)
+
+  const getTokensToBeClaimed = async () => {
+    try {
+      const signer = await connectWallet(true)
+      const nftContract = new Contract(NFT_Contract_Address,NFT_Contract_ABI,provider)
+      const address = await signer.getAddress()
+      const balance = await nftContract.balaneOf(address)
+      if(balance==zero){
+        setTokensToBeClaimed(zero)
+      }
+      else{
+        var amount = 0
+        for(var i=0; i<balance; i++){
+          const tokenId = await nftContract.tokenOfOwnerByIndex(address,i)
+          const claimed = await nftContract.tokenIdClaimed(tokenId)
+          if(!claimed){
+            amount++
+          }
+        }
+        setTokensToBeClaimed(BigNumber.from(amount))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getBalanceOfAddress = async () => {
+    try {
+      const signer = await connectWallet(true)
+      const tokenContract = new Contract(Token_Contact_Address,Token_Contract_ABI,signer)
+      const address = await signer.getAddress()
+      const balance = await tokenContract.balanceOf(address)
+      setBalanceOfAddress(balance)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getTotalTokensMinted = async () => {
+    try {
+      const provider = await connectWallet()
+      const tokenContract = new Contract(Token_Contact_Address,Token_Contract_ABI,provider)
+      const tokensMinted = await tokenContract.totalSupply()
+      setTokensMinted(tokensMinted)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const mintTokens = async (amount) => {
     try {
@@ -36,11 +85,28 @@ export default function Home() {
       await txn.wait()
       setLoading(false)
       window.alert("successfully minted")
+      await getBalanceOfAddress()
+      await getTotalTokensMinted()
+      await getTokensToBeClaimed()
     } catch (error) {
       console.log(error)
     }
   }
   const renderButton = () => {
+    if(loading){
+      return(
+        <div>
+          <button className={styles.button} >Loading...</button>
+        </div>
+      )
+    }
+    if(tokensToBeClaimed){
+      return(
+        <div>
+
+        </div>
+      )
+    }
     return(
       <div style={{display:'flex-col'}} >
         <div>
