@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import styles from '../styles/Home.module.css'
 import Web3Modal from 'web3modal'
 import { ethers, Contract, BigNumber } from 'ethers';
-import {Token_Contact_Address,Token_Contract_ABI,NFT_Contract_Address,NFT_Contract_ABI} from '../constants/index'
+import {Token_Contact_Address,Token_Contract_ABI,NFT_Contact_Address,NFT_Contract_ABI} from '../constants/index'
 
 let web3modal
 
@@ -30,10 +30,10 @@ export default function Home() {
   const getTokensToBeClaimed = async () => {
     try {
       const signer = await connectWallet(true)
-      const nftContract = new Contract(NFT_Contract_Address,NFT_Contract_ABI,signer)
+      const nftContract = new Contract(NFT_Contact_Address,NFT_Contract_ABI,signer)
       const tokenContract = new Contract(Token_Contact_Address,Token_Contract_ABI,signer)
       const address = await signer.getAddress()
-      const balance = await nftContract.balaneOf(address)
+      const balance = await nftContract.balanceOf(address)
       if(balance==zero){
         setTokensToBeClaimed(zero)
       }
@@ -50,6 +50,7 @@ export default function Home() {
       }
     } catch (error) {
       console.log(error)
+      setTokensToBeClaimed(zero)
     }
   }
 
@@ -132,7 +133,7 @@ export default function Home() {
     return(
       <div style={{display:'flex-col'}} >
         <div>
-          <input type="number" placeholder="amount of tokens" onChnage={(e)=>setTokenAmount(BigNumber.from(e.target.value))} />
+          <input type="number" placeholder="amount of tokens" onChange={(e)=>setTokenAmount(BigNumber.from(e.target.value))} />
           <button className={styles.button} disabled={!(tokenAmount>0)} onClick={()=>mintTokens(tokenAmount)} >
             Mint Tokens
           </button>
@@ -195,7 +196,7 @@ export default function Home() {
                 <div className={styles.description} >
                   {ethers.utils.formatEther(tokensMinted)}/1000 have been minted
                 </div>
-                {renderButton}
+                {renderButton()}
               </div>
               ) : (<button onClick={connectWallet} className={styles.button} >Connect Wallet</button>)
             }
