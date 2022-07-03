@@ -31,6 +31,7 @@ export default function Home() {
     try {
       const signer = await connectWallet(true)
       const nftContract = new Contract(NFT_Contract_Address,NFT_Contract_ABI,signer)
+      const tokenContract = new Contract(Token_Contact_Address,Token_Contract_ABI,signer)
       const address = await signer.getAddress()
       const balance = await nftContract.balaneOf(address)
       if(balance==zero){
@@ -40,7 +41,7 @@ export default function Home() {
         var amount = 0
         for(var i=0; i<balance; i++){
           const tokenId = await nftContract.tokenOfOwnerByIndex(address,i)
-          const claimed = await nftContract.tokenIdClaimed(tokenId)
+          const claimed = await tokenContract.tokenIdClaimed(tokenId)
           if(!claimed){
             amount++
           }
@@ -118,7 +119,7 @@ export default function Home() {
         </div>
       )
     }
-    if(tokensToBeClaimed){
+    if(tokensToBeClaimed>0){
       return(
         <div>
           <div>
@@ -196,7 +197,7 @@ export default function Home() {
                 </div>
                 {renderButton}
               </div>
-              ) : (<button onClick={connectWallet} >Connect Wallet</button>)
+              ) : (<button onClick={connectWallet} className={styles.button} >Connect Wallet</button>)
             }
           </div>
         </div>
