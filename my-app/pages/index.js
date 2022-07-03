@@ -120,7 +120,7 @@ export default function Home() {
         </div>
       )
     }
-    if(tokensToBeClaimed>0){
+    if(tokensToBeClaimed > 0){
       return(
         <div>
           <div>
