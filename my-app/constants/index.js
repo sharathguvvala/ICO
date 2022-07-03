@@ -1,6 +1,6 @@
-const Token_Contact_Address = "0x559Ac5bD0B05C8679f48F933984D01B009904eE7"
-const NFT_Contact_Address = "0x6DA07c6fE828fCeBD8de08976Ff23abe7FE19078"
-const Token_Contract_ABI = [
+export const Token_Contact_Address = "0x559Ac5bD0B05C8679f48F933984D01B009904eE7"
+export const NFT_Contact_Address = "0x6DA07c6fE828fCeBD8de08976Ff23abe7FE19078"
+export const Token_Contract_ABI = [
     {
       "inputs": [
         {
@@ -421,7 +421,7 @@ const Token_Contract_ABI = [
       "type": "receive"
     }
   ]
-const NFT_Contract_ABI = [
+export const NFT_Contract_ABI = [
     {
       "inputs": [
         {

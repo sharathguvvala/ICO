@@ -30,7 +30,7 @@ export default function Home() {
   const getTokensToBeClaimed = async () => {
     try {
       const signer = await connectWallet(true)
-      const nftContract = new Contract(NFT_Contract_Address,NFT_Contract_ABI,provider)
+      const nftContract = new Contract(NFT_Contract_Address,NFT_Contract_ABI,signer)
       const address = await signer.getAddress()
       const balance = await nftContract.balaneOf(address)
       if(balance==zero){
@@ -84,7 +84,7 @@ export default function Home() {
       setLoading(true)
       await txn.wait()
       setLoading(false)
-      window.alert("successfully minted")
+      window.alert("successfully minted Web3 Dev tokens")
       await getBalanceOfAddress()
       await getTotalTokensMinted()
       await getTokensToBeClaimed()
@@ -92,6 +92,24 @@ export default function Home() {
       console.log(error)
     }
   }
+  
+  const claimTokens = async () => {
+    try {
+      const signer = await connectWallet(true)
+      const tokenContract = new Contract(Token_Contact_Address,Token_Contract_ABI,signer)
+      const txn = tokenContract.claim()
+      setLoading(true)
+      await txn.wait()
+      setLoading(false)
+      window.alert("successfully claimed Web3 Dev tokens")
+      await getBalanceOfAddress()
+      await getTotalTokensMinted()
+      await getTokensToBeClaimed()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const renderButton = () => {
     if(loading){
       return(
@@ -103,7 +121,10 @@ export default function Home() {
     if(tokensToBeClaimed){
       return(
         <div>
-
+          <div>
+            {tokensToBeClaimed*10} tokens can be claimed!
+          </div>
+          <button className={styles.button} onClick={claimTokens} >Claim Tokens</button>
         </div>
       )
     }
@@ -145,6 +166,9 @@ export default function Home() {
     if(!walletConnected){
       connectWallet()
     }
+    getBalanceOfAddress()
+    getTotalTokensMinted()
+    getTokensToBeClaimed()
   },[])
 
   return (
@@ -175,6 +199,9 @@ export default function Home() {
               ) : (<button onClick={connectWallet} >Connect Wallet</button>)
             }
           </div>
+        </div>
+        <div>
+          <img className={styles.image} src="./15.svg" />
         </div>
       </div>
       <footer className={styles.footer}>
